@@ -1,0 +1,884 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Python Tutor Training — Kodland</title>
+<link href="https://fonts.googleapis.com/css2?family=Nunito:wght@700;800;900&family=Plus+Jakarta+Sans:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+:root{
+  --lime:#C4F046;--lime-d:#AEDD2E;--pink:#F03D9E;--pink-d:#D4308A;
+  --ink:#111111;--ink2:#3A3A3A;--muted:#7A7A8A;
+  --bg:#E8FABD;--surface:#FFFFFF;--surface2:#F4FCD3;--border:#D8F07A;
+  --text:var(--ink);--text2:var(--ink2);--text-muted:var(--muted);
+  --nav-bg:rgba(255,255,255,0.94);--nav-b:#DDFAA0;
+  --shadow:0 2px 12px rgba(0,0,0,.07);--shadow-h:0 8px 28px rgba(0,0,0,.13);
+  --code-bg:#111820;--code-text:#C9E4FF;
+  --cw-bg:#FFF7F0;--cw-b:#FED7AA;--cw-t:#9A3412;
+  --ct-bg:#F0F9FF;--ct-b:#BAE6FD;--ct-t:#0C4A6E;
+  --cg-bg:#F0FDF4;--cg-b:#BBF7D0;--cg-t:#14532D;
+  --hi-bg:#FFF0F8;--hi-b:#F9A8D4;--hi-t:#831843;
+  --opt-h:#F4FCD3;
+  --ok-bg:#F0FDF4;--ok-b:#86EFAC;--ok-t:#15803D;
+  --no-bg:#FEF2F2;--no-b:#FECACA;--no-t:#B91C1C;
+  --r:14px;--rsm:8px;--rpill:999px;
+}
+[data-theme="dark"]{
+  --bg:#0E1210;--surface:#181F15;--surface2:#1E2A18;--border:#2A3D22;
+  --text:#F0FAD8;--text2:#B8D89A;--text-muted:#6B8A5A;
+  --nav-bg:rgba(14,18,16,0.94);--nav-b:#2A3D22;
+  --shadow:0 2px 16px rgba(0,0,0,.5);--shadow-h:0 8px 28px rgba(0,0,0,.5);
+  --cw-bg:rgba(249,115,22,.1);--cw-b:rgba(249,115,22,.3);--cw-t:#FB923C;
+  --ct-bg:rgba(14,165,233,.1);--ct-b:rgba(14,165,233,.3);--ct-t:#38BDF8;
+  --cg-bg:rgba(34,197,94,.1);--cg-b:rgba(34,197,94,.3);--cg-t:#4ADE80;
+  --hi-bg:rgba(240,61,158,.08);--hi-b:rgba(240,61,158,.3);--hi-t:#F472B6;
+  --opt-h:#1E2A18;
+  --ok-bg:rgba(34,197,94,.1);--ok-b:rgba(34,197,94,.4);--ok-t:#4ADE80;
+  --no-bg:rgba(239,68,68,.1);--no-b:rgba(239,68,68,.4);--no-t:#F87171;
+}
+*{box-sizing:border-box;margin:0;padding:0}
+html{scroll-behavior:smooth}
+body{background:var(--bg);color:var(--text);font-family:'Plus Jakarta Sans',sans-serif;min-height:100vh;overflow-x:hidden;transition:background .25s,color .25s}
+.screen{display:none;min-height:100vh;flex-direction:column}
+.screen.active{display:flex}
+/* NAV */
+.nav{display:flex;align-items:center;justify-content:space-between;padding:0 28px;height:62px;background:var(--nav-bg);backdrop-filter:blur(14px);border-bottom:2px solid var(--nav-b);position:sticky;top:0;z-index:100;transition:background .25s,border-color .25s}
+.logo{display:flex;align-items:center;gap:8px;text-decoration:none;flex-shrink:0}
+.logo-mark{font-family:'Nunito',sans-serif;font-weight:900;font-size:20px;letter-spacing:-.5px;color:var(--ink);line-height:1;white-space:nowrap}
+[data-theme="dark"] .logo-mark{color:var(--lime)}
+.logo-sub{font-family:'Nunito',sans-serif;font-weight:800;font-size:13px;color:var(--pink);white-space:nowrap;line-height:1}
+.logo-div{width:1px;height:16px;background:var(--border);margin:0 4px}
+.nav-r{display:flex;align-items:center;gap:8px}
+.tbtn{width:38px;height:38px;border-radius:var(--rpill);background:var(--surface);border:2px solid var(--border);display:flex;align-items:center;justify-content:center;font-size:16px;cursor:pointer;transition:all .15s;flex-shrink:0}
+.tbtn:hover{background:var(--lime);border-color:var(--lime-d)}
+.pbtn{display:flex;align-items:center;gap:5px;padding:8px 16px;border-radius:var(--rpill);background:var(--surface);border:2px solid var(--border);color:var(--text2);font-family:'Plus Jakarta Sans',sans-serif;font-size:13px;font-weight:600;cursor:pointer;transition:all .15s;white-space:nowrap}
+.pbtn:hover{background:var(--lime);border-color:var(--lime-d);color:var(--ink)}
+/* HERO */
+.hero{padding:52px 40px 36px;text-align:center;position:relative}
+.hero::before{content:'';position:absolute;inset:0;bottom:30%;background:radial-gradient(ellipse 70% 55% at 50% 0%,var(--lime) 0%,transparent 70%);opacity:.45;pointer-events:none}
+[data-theme="dark"] .hero::before{background:radial-gradient(ellipse 70% 55% at 50% 0%,rgba(196,240,70,.15) 0%,transparent 70%);opacity:1}
+.hero-inner{position:relative;max-width:600px;margin:0 auto}
+.eyebrow{display:inline-flex;align-items:center;gap:6px;background:var(--surface);border:2px solid var(--border);border-radius:var(--rpill);padding:5px 14px;font-family:'Nunito',sans-serif;font-size:12px;font-weight:900;color:var(--text2);margin-bottom:20px;text-transform:uppercase;letter-spacing:.5px}
+.hero h1{font-family:'Nunito',sans-serif;font-size:clamp(28px,5vw,46px);font-weight:900;line-height:1.1;letter-spacing:-1px;color:var(--text);margin-bottom:14px}
+.h-pill{display:inline-block;background:var(--pink);color:#fff;border-radius:var(--rpill);padding:1px 18px;margin:0 2px;font-size:.93em}
+[data-theme="dark"] .h-pill{background:var(--lime);color:var(--ink)}
+.hero p{color:var(--text2);font-size:15px;line-height:1.65;margin-bottom:28px}
+.prog-strip{display:inline-flex;align-items:center;gap:14px;background:var(--surface);border:2px solid var(--border);border-radius:var(--rpill);padding:10px 20px;box-shadow:var(--shadow);max-width:360px;width:100%}
+.pnum{font-family:'Nunito',sans-serif;font-weight:900;font-size:22px;color:var(--text);line-height:1;flex-shrink:0}
+.ptrack{flex:1;height:8px;background:var(--surface2);border:1.5px solid var(--border);border-radius:var(--rpill);overflow:hidden}
+.pfill{height:100%;background:linear-gradient(90deg,var(--lime),var(--pink));border-radius:var(--rpill);transition:width .6s cubic-bezier(.34,1.56,.64,1)}
+.plbl{font-size:12px;color:var(--text-muted);font-weight:600;flex-shrink:0}
+/* GRID */
+.msec{padding:8px 32px 70px;max-width:1060px;margin:0 auto;width:100%}
+.slbl{font-family:'Nunito',sans-serif;font-size:12px;font-weight:900;text-transform:uppercase;letter-spacing:1.5px;color:var(--text-muted);margin-bottom:16px;margin-top:4px}
+.grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(290px,1fr));gap:14px}
+.mc{background:var(--surface);border:2px solid var(--border);border-radius:var(--r);overflow:hidden;cursor:pointer;transition:transform .2s,box-shadow .2s,border-color .2s;box-shadow:var(--shadow)}
+.mc:hover:not(.locked){transform:translateY(-4px);box-shadow:var(--shadow-h)}
+.mc.locked{opacity:.45;cursor:not-allowed}
+.mc.done{border-color:var(--lime-d)}
+[data-theme="dark"] .mc.done{border-color:rgba(196,240,70,.4)}
+.mc-stripe{height:6px}
+.mc-body{padding:20px}
+.mc-top{display:flex;align-items:center;justify-content:space-between;margin-bottom:8px}
+.mc-num{font-size:11px;font-weight:700;letter-spacing:.8px;text-transform:uppercase;color:var(--text-muted)}
+.mc-em{font-size:22px}
+.mc-title{font-family:'Nunito',sans-serif;font-size:17px;font-weight:900;letter-spacing:-.2px;color:var(--text);margin-bottom:5px}
+.mc-desc{font-size:13px;color:var(--text2);line-height:1.55}
+.mc-foot{margin-top:15px;display:flex;align-items:center;justify-content:space-between}
+.badge{font-family:'Nunito',sans-serif;font-size:11px;font-weight:900;letter-spacing:.3px;padding:4px 12px;border-radius:var(--rpill);text-transform:uppercase}
+.bd{background:var(--lime);color:var(--ink);border:1.5px solid var(--lime-d)}
+.bs{background:var(--pink);color:#fff;border:1.5px solid var(--pink-d)}
+.bl{background:var(--surface2);color:var(--text-muted);border:1.5px solid var(--border)}
+[data-theme="dark"] .bd{background:rgba(196,240,70,.18);color:var(--lime);border-color:rgba(196,240,70,.4)}
+[data-theme="dark"] .bs{background:rgba(240,61,158,.18);color:var(--pink);border-color:rgba(240,61,158,.4)}
+.stag{font-size:12px;color:var(--text-muted);font-weight:600}
+.stag b{color:var(--text)}
+/* CONTENT */
+.cbody{padding:36px 40px 60px;max-width:800px;margin:0 auto;width:100%;flex:1}
+.meyebrow{font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:1px;color:var(--text-muted);margin-bottom:8px}
+.mh1{font-family:'Nunito',sans-serif;font-size:clamp(24px,4vw,34px);font-weight:900;letter-spacing:-.6px;line-height:1.12;color:var(--text);margin-bottom:14px}
+.mobj{background:var(--surface);border:2px solid var(--border);border-left:5px solid var(--acc,var(--lime));border-radius:0 var(--rsm) var(--rsm) 0;padding:12px 16px;font-size:14px;color:var(--text2);line-height:1.6;margin-bottom:32px}
+.mobj strong{color:var(--text)}
+.sch{font-family:'Nunito',sans-serif;font-size:16px;font-weight:900;margin:28px 0 12px;color:var(--text);display:flex;align-items:center;gap:8px}
+.sch::after{content:'';flex:1;height:2px;background:var(--border);border-radius:2px}
+.card{background:var(--surface);border:2px solid var(--border);border-radius:var(--r);padding:18px 20px;margin-bottom:10px;box-shadow:var(--shadow)}
+.card h4{font-family:'Nunito',sans-serif;font-size:14px;font-weight:900;color:var(--text);margin-bottom:7px}
+.card p,.card li{font-size:14px;color:var(--text2);line-height:1.7}
+.card ul{padding-left:17px}
+.card li{margin-bottom:4px}
+.card p strong,.card li strong{color:var(--text)}
+.card code{font-family:'JetBrains Mono',monospace;font-size:12px;background:var(--surface2);border:1.5px solid var(--border);border-radius:5px;padding:2px 7px;color:var(--pink)}
+[data-theme="dark"] .card code{color:var(--lime)}
+.card.hi{background:var(--hi-bg);border-color:var(--hi-b)}
+.card.hi h4{color:var(--hi-t)}
+.card.hi p,.card.hi li{color:var(--hi-t);opacity:.88}
+.card.hi code{background:rgba(240,61,158,.1);border-color:rgba(240,61,158,.25);color:var(--pink)}
+.codecard{background:var(--code-bg)!important;border-color:rgba(255,255,255,.06)!important}
+.clbl{font-size:11px;font-weight:700;letter-spacing:.8px;text-transform:uppercase;color:#4A5C70;margin-bottom:9px}
+.codecard pre{font-family:'JetBrains Mono',monospace;font-size:12.5px;color:var(--code-text);line-height:1.75;overflow-x:auto;white-space:pre}
+.ck{color:#C792EA}.cf{color:#82AAFF}.cs{color:#C3E88D}.cn{color:#F78C6C}.cc{color:#546E7A}
+.callout{display:flex;gap:10px;border-radius:var(--rsm);padding:12px 15px;margin-bottom:10px;font-size:13.5px;line-height:1.65;border:1.5px solid}
+.ci{font-size:15px;flex-shrink:0;margin-top:1px}
+.cw{background:var(--cw-bg);border-color:var(--cw-b);color:var(--cw-t)}
+.ct{background:var(--ct-bg);border-color:var(--ct-b);color:var(--ct-t)}
+.cg{background:var(--cg-bg);border-color:var(--cg-b);color:var(--cg-t)}
+.two-col{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+@media(max-width:560px){.two-col{grid-template-columns:1fr}}
+.divider{border:none;border-top:2px solid var(--border);margin:28px 0}
+.ctabtn{display:block;width:100%;padding:16px;background:var(--ink);color:#fff;border:none;border-radius:var(--rpill);font-family:'Nunito',sans-serif;font-size:17px;font-weight:900;cursor:pointer;transition:all .15s;margin-bottom:40px;margin-top:4px;box-shadow:0 4px 16px rgba(0,0,0,.15)}
+.ctabtn:hover{background:var(--pink);transform:translateY(-2px);box-shadow:0 6px 20px rgba(240,61,158,.35)}
+[data-theme="dark"] .ctabtn{background:var(--lime);color:var(--ink)}
+[data-theme="dark"] .ctabtn:hover{background:var(--pink);color:#fff}
+@media(max-width:640px){.cbody,.msec,.hero{padding-left:18px;padding-right:18px}}
+/* QUIZ */
+.qbody{padding:36px 40px;max-width:680px;margin:0 auto;width:100%;flex:1}
+.qpt{height:7px;background:var(--surface2);border:1.5px solid var(--border);border-radius:var(--rpill);margin-bottom:36px;overflow:hidden}
+.qpf{height:100%;background:linear-gradient(90deg,var(--lime),var(--pink));border-radius:var(--rpill);transition:width .4s ease}
+.qctr{font-size:12px;font-weight:700;text-transform:uppercase;letter-spacing:1px;color:var(--text-muted);margin-bottom:10px}
+.qtxt{font-family:'Nunito',sans-serif;font-size:21px;font-weight:900;letter-spacing:-.3px;line-height:1.35;margin-bottom:26px;color:var(--text)}
+.qopts{display:flex;flex-direction:column;gap:10px}
+.qopt{background:var(--surface);border:2px solid var(--border);border-radius:var(--r);padding:14px 18px;cursor:pointer;font-size:14px;color:var(--text);font-family:'Plus Jakarta Sans',sans-serif;transition:all .15s;text-align:left;line-height:1.5;box-shadow:var(--shadow)}
+.qopt:hover:not(.answered){background:var(--opt-h);border-color:var(--lime-d)}
+.qopt.correct{background:var(--ok-bg);border-color:var(--ok-b);color:var(--ok-t)}
+.qopt.wrong{background:var(--no-bg);border-color:var(--no-b);color:var(--no-t)}
+.qopt.answered{cursor:default}
+.qfb{display:none;margin-top:14px;border-radius:var(--rsm);padding:13px 16px;font-size:14px;line-height:1.6;border:2px solid}
+.qfb.show{display:block}
+.qfb.ok{background:var(--ok-bg);border-color:var(--ok-b);color:var(--ok-t)}
+.qfb.bad{background:var(--no-bg);border-color:var(--no-b);color:var(--no-t)}
+.qnxt{display:none;margin-top:18px;width:100%;padding:14px;background:var(--ink);color:#fff;border:none;border-radius:var(--rpill);font-family:'Nunito',sans-serif;font-size:16px;font-weight:900;cursor:pointer;transition:all .15s}
+.qnxt.show{display:block}
+.qnxt:hover{background:var(--lime);color:var(--ink)}
+[data-theme="dark"] .qnxt{background:var(--lime);color:var(--ink)}
+[data-theme="dark"] .qnxt:hover{background:var(--pink);color:#fff}
+/* RESULTS */
+.rbody{padding:60px 40px;max-width:520px;margin:0 auto;text-align:center;flex:1}
+.remi{font-size:64px;margin-bottom:14px}
+.rtitle{font-family:'Nunito',sans-serif;font-size:30px;font-weight:900;letter-spacing:-.4px;color:var(--text)}
+.rpct{font-family:'Nunito',sans-serif;font-size:62px;font-weight:900;line-height:1;margin:14px 0 6px}
+.rpct.pass{color:var(--lime-d)}
+.rpct.fail{color:var(--pink)}
+[data-theme="dark"] .rpct.pass{color:var(--lime)}
+.rsub{color:var(--text2);font-size:15px;line-height:1.65;margin-bottom:30px}
+.bdark{display:block;width:100%;padding:14px 24px;margin-bottom:10px;background:var(--ink);color:#fff;border:none;border-radius:var(--rpill);font-family:'Nunito',sans-serif;font-size:16px;font-weight:900;cursor:pointer;transition:all .15s}
+.bdark:hover{background:var(--pink)}
+[data-theme="dark"] .bdark{background:var(--lime);color:var(--ink)}
+[data-theme="dark"] .bdark:hover{background:var(--pink);color:#fff}
+.bline{display:block;width:100%;padding:13px 24px;margin-bottom:10px;background:transparent;color:var(--text2);border:2px solid var(--border);border-radius:var(--rpill);font-family:'Plus Jakarta Sans',sans-serif;font-size:14px;font-weight:600;cursor:pointer;transition:all .15s}
+.bline:hover{background:var(--surface2);color:var(--text);border-color:var(--lime-d)}
+/* CERT */
+.compbody{padding:60px 40px;max-width:600px;margin:0 auto;text-align:center;flex:1}
+.cert{background:var(--surface);border:3px solid var(--lime-d);border-radius:20px;padding:32px 28px;margin:28px 0;box-shadow:0 0 40px rgba(196,240,70,.18);position:relative;overflow:hidden}
+.cert::before{content:'';position:absolute;top:-60px;right:-60px;width:160px;height:160px;border-radius:50%;background:var(--lime);opacity:.1;pointer-events:none}
+.clbl2{font-family:'Nunito',sans-serif;font-size:11px;font-weight:900;text-transform:uppercase;letter-spacing:2px;color:var(--pink);margin-bottom:12px}
+.cert h2{font-family:'Nunito',sans-serif;font-size:24px;font-weight:900;letter-spacing:-.3px;color:var(--text)}
+.cert p{color:var(--text2);margin-top:6px;font-size:14px}
+.cmods{display:flex;justify-content:center;gap:8px;margin-top:20px;flex-wrap:wrap}
+.cmod{width:40px;height:40px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:16px}
+/* DST */
+.dst-body{padding:60px 40px;max-width:640px;margin:0 auto;flex:1;text-align:center}
+.dst-badge{display:inline-flex;align-items:center;gap:6px;background:var(--lime);color:var(--ink);border:2px solid var(--lime-d);border-radius:var(--rpill);padding:5px 14px;font-family:'Nunito',sans-serif;font-size:12px;font-weight:900;text-transform:uppercase;letter-spacing:.5px;margin-bottom:18px}
+[data-theme="dark"] .dst-badge{background:rgba(196,240,70,.18);color:var(--lime);border-color:rgba(196,240,70,.4)}
+.dst-h1{font-family:'Nunito',sans-serif;font-size:clamp(24px,4vw,34px);font-weight:900;letter-spacing:-.6px;line-height:1.12;color:var(--text);margin-bottom:14px}
+.dst-sub{font-size:15px;color:var(--text2);line-height:1.7;margin-bottom:30px}
+.dst-placeholder{background:var(--surface);border:2px dashed var(--border);border-radius:var(--r);padding:48px 28px;color:var(--text-muted);font-size:14px;line-height:1.7}
+.dst-placeholder .dpe{font-size:44px;margin-bottom:14px}
+/* skip & modal */
+.modal-overlay{display:none;position:fixed;inset:0;background:rgba(0,0,0,.45);backdrop-filter:blur(4px);z-index:200;align-items:center;justify-content:center}
+.modal-overlay.show{display:flex}
+.modal{background:var(--surface);border:2px solid var(--border);border-radius:20px;padding:32px 28px;max-width:440px;width:90%;text-align:center;box-shadow:0 20px 60px rgba(0,0,0,.2)}
+.modal h3{font-family:'Nunito',sans-serif;font-size:20px;font-weight:900;color:var(--text);margin-bottom:10px}
+.modal p{font-size:14px;color:var(--text2);line-height:1.65;margin-bottom:24px}
+.modal-btns{display:flex;gap:10px}
+.modal-yes{flex:1;padding:13px;background:var(--pink);color:#fff;border:none;border-radius:var(--rpill);font-family:'Nunito',sans-serif;font-size:15px;font-weight:900;cursor:pointer;transition:all .15s}
+.modal-yes:hover{background:var(--pink-d)}
+.modal-no{flex:1;padding:13px;background:var(--surface2);color:var(--text2);border:2px solid var(--border);border-radius:var(--rpill);font-family:'Nunito',sans-serif;font-size:15px;font-weight:700;cursor:pointer;transition:all .15s}
+.modal-no:hover{background:var(--border);color:var(--text)}
+.skip-row{text-align:center;padding:0 32px 48px}
+.skip-btn{background:none;border:none;color:var(--text-muted);font-family:'Plus Jakarta Sans',sans-serif;font-size:13px;font-weight:600;cursor:pointer;text-decoration:underline;text-underline-offset:3px;transition:color .15s}
+.skip-btn:hover{color:var(--text2)}
+@media(max-width:640px){.dst-body{padding-left:18px;padding-right:18px}}
+</style>
+</head>
+<body>
+
+<!-- HOME -->
+<div id="screen-home" class="screen active">
+  <nav class="nav">
+    <a class="logo" href="#" onclick="goHome()">
+      <span class="logo-mark">kodland</span>
+      <span class="logo-div"></span>
+      <span class="logo-sub">Python Training</span>
+    </a>
+    <div class="nav-r">
+      <span id="ntag" style="font-size:13px;color:var(--text-muted);font-weight:600;display:none"></span>
+      <button class="tbtn" id="tb0" onclick="toggleTheme()"></button>
+    </div>
+  </nav>
+  <div class="hero">
+    <div class="hero-inner">
+      <div class="eyebrow">🐍 Tutor Training Program</div>
+      <h1>Prepare to teach<br><span class="h-pill">Python</span><br>to kids</h1>
+      <p>Work through all 7 modules and pass each quiz to complete your tutor preparation. Score 70%+ to unlock the next module.</p>
+      <div class="prog-strip">
+        <div class="pnum" id="pnum">0/7</div>
+        <div class="ptrack"><div class="pfill" id="pfill" style="width:0%"></div></div>
+        <div class="plbl">modules done</div>
+      </div>
+    </div>
+  </div>
+  <div class="msec">
+    <div class="slbl">Your modules</div>
+    <div class="grid" id="mgrid"></div>
+  </div>
+  <div class="skip-row">
+    <button class="skip-btn" onclick="document.getElementById('skip-modal').classList.add('show')">Skip training and go straight to the DST →</button>
+  </div>
+</div>
+
+<!-- SKIP MODAL -->
+<div class="modal-overlay" id="skip-modal">
+  <div class="modal">
+    <div style="font-size:40px;margin-bottom:12px">⚡</div>
+    <h3>Skip the training?</h3>
+    <p>Are you sure you'd like to skip the training materials and go straight to the Digital Skill Test?</p>
+    <div class="modal-btns">
+      <button class="modal-no" onclick="document.getElementById('skip-modal').classList.remove('show')">No, keep studying</button>
+      <button class="modal-yes" onclick="document.getElementById('skip-modal').classList.remove('show');showDST()">Yes, take the DST</button>
+    </div>
+  </div>
+</div>
+
+<!-- CONTENT -->
+<div id="screen-content" class="screen">
+  <nav class="nav">
+    <a class="logo" href="#" onclick="goHome()">
+      <span class="logo-mark">kodland</span>
+      <span class="logo-div"></span>
+      <span class="logo-sub">Python Training</span>
+    </a>
+    <div class="nav-r">
+      <button class="pbtn" onclick="goHome()">← Modules</button>
+      <button class="tbtn" onclick="toggleTheme()"></button>
+    </div>
+  </nav>
+  <div class="cbody" id="cbody"></div>
+</div>
+
+<!-- QUIZ -->
+<div id="screen-quiz" class="screen">
+  <nav class="nav">
+    <a class="logo" href="#" onclick="goHome()">
+      <span class="logo-mark">kodland</span>
+      <span class="logo-div"></span>
+      <span class="logo-sub">Python Training</span>
+    </a>
+    <div class="nav-r">
+      <button class="pbtn" onclick="exitQuiz()">← Exit Quiz</button>
+      <button class="tbtn" onclick="toggleTheme()"></button>
+    </div>
+  </nav>
+  <div class="qbody">
+    <div class="qpt"><div class="qpf" id="qfill"></div></div>
+    <div class="qctr" id="qcount"></div>
+    <div class="qtxt" id="qtext"></div>
+    <div class="qopts" id="qopts"></div>
+    <div class="qfb" id="qfb"></div>
+    <button class="qnxt" id="qnxt" onclick="nextQ()">Next →</button>
+  </div>
+</div>
+
+<!-- RESULTS -->
+<div id="screen-results" class="screen">
+  <nav class="nav">
+    <a class="logo" href="#" onclick="goHome()">
+      <span class="logo-mark">kodland</span>
+      <span class="logo-div"></span>
+      <span class="logo-sub">Python Training</span>
+    </a>
+    <div class="nav-r">
+      <button class="pbtn" onclick="goHome()">← Modules</button>
+      <button class="tbtn" onclick="toggleTheme()"></button>
+    </div>
+  </nav>
+  <div class="rbody" id="rbody"></div>
+</div>
+
+<!-- COMPLETE -->
+<div id="screen-complete" class="screen">
+  <nav class="nav">
+    <a class="logo" href="#" onclick="goHome()">
+      <span class="logo-mark">kodland</span>
+      <span class="logo-div"></span>
+      <span class="logo-sub">Python Training</span>
+    </a>
+    <div class="nav-r">
+      <button class="pbtn" onclick="goHome()">← Dashboard</button>
+      <button class="tbtn" onclick="toggleTheme()"></button>
+    </div>
+  </nav>
+  <div class="compbody" id="compbody"></div>
+</div>
+
+<!-- DST SCREEN (left blank — to be filled in later) -->
+<div id="screen-dst" class="screen">
+  <nav class="nav">
+    <a class="logo" href="#" onclick="goHome()">
+      <span class="logo-mark">kodland</span>
+      <span class="logo-div"></span>
+      <span class="logo-sub">Python Training</span>
+    </a>
+    <div class="nav-r">
+      <button class="pbtn" onclick="goHome()">← Modules</button>
+      <button class="tbtn" onclick="toggleTheme()"></button>
+    </div>
+  </nav>
+  <div class="dst-body">
+    <div class="dst-badge">🏆 Digital Skill Test</div>
+    <div class="dst-h1">The DST goes here</div>
+    <p class="dst-sub">This is the final practical assessment. The tasks will be added later.</p>
+    <div class="dst-placeholder">
+      <div class="dpe">🚧</div>
+      <strong>Coming soon.</strong><br>
+      The Digital Skill Test content has not been added yet.
+    </div>
+  </div>
+</div>
+
+<script>
+// ─── THEME ──────────────────────────────────────────────────────────────────
+(function(){
+  const s=localStorage.getItem('kl-theme');
+  const sys=window.matchMedia('(prefers-color-scheme: dark)').matches?'dark':'light';
+  const t=s||sys;
+  if(t==='dark') document.documentElement.setAttribute('data-theme','dark');
+  setIcons(t);
+})();
+function setIcons(t){ document.querySelectorAll('.tbtn').forEach(b=>b.textContent=t==='dark'?'☀️':'🌙'); }
+function toggleTheme(){
+  const d=document.documentElement.getAttribute('data-theme')==='dark';
+  const n=d?'light':'dark';
+  n==='dark'?document.documentElement.setAttribute('data-theme','dark'):document.documentElement.removeAttribute('data-theme');
+  localStorage.setItem('kl-theme',n); setIcons(n);
+}
+
+// ─── MODULE DATA ──────────────────────────────────────────────────────────
+// Teaching-focused content. Assumes the candidate already knows Python; each
+// module prepares them to TEACH that part of the Kodland Python course.
+const MODULES = [
+  {
+    id:1, emoji:'🐍', color:'#AEDD2E',
+    title:'Python Foundations',
+    desc:'print, variables, input and data types — the very first lessons kids meet.',
+    obj:'Be ready to teach a child their first lines of Python: output, variables, input, and the basic data types — and to spot the mistakes beginners always make.',
+    sections:[
+      {t:'📚 What this covers in the course', cards:[
+        {type:'text', h:'The opening module', b:'This is where students write their first program ever. The arc is: <code>print()</code> to show text → variables to store things → <code>input()</code> to talk to the user → data types and <code>type()</code> → converting between types with <code>int()</code> and <code>str()</code>. Everything later builds on this.'},
+        {type:'tip', txt:'A child\'s very first "Hello, world!" should run within the first few minutes. Early success keeps them engaged — don\'t front-load theory.'}
+      ]},
+      {t:'💻 The code they\'ll see', cards:[
+        {type:'code', lbl:'print, variables & input', code:`<span class="cf">print</span>(<span class="cs">"Hello! What's your name?"</span>)
+name = <span class="cf">input</span>()
+<span class="cf">print</span>(<span class="cs">"Nice to meet you,"</span>, name)
+
+age = <span class="cf">int</span>(<span class="cf">input</span>(<span class="cs">"How old are you? "</span>))
+<span class="cf">print</span>(<span class="cs">"Next year you'll be"</span>, age <span class="ck">+</span> <span class="cn">1</span>)`},
+        {type:'text', h:'Why the int() matters', b:'<code>input()</code> <strong>always</strong> returns a string. <code>age + 1</code> would crash without <code>int()</code>. This single idea — "input is text until you convert it" — is the #1 thing to drill.'}
+      ]},
+      {t:'🧒 How kids stumble', cards:[
+        {type:'twocol', left:{h:'Common mistakes', items:['Forgetting quotes around text → <code>NameError</code>','Adding a string and a number','Mixing up <code>=</code> (assign) and <code>==</code> (compare)','Typos in variable names']}, right:{h:'How to head them off', items:['Show the error message — teach them to read it','Demo <code>type()</code> live','Keep names short & meaningful','Run code often, in tiny steps']}},
+        {type:'warn', txt:'<code>"5" + "3"</code> gives <code>"53"</code>, not <code>8</code>. Show this on purpose — surprising bugs stick in memory better than rules.'}
+      ]},
+      {t:'🎯 Teaching tips', cards:[
+        {type:'hi', h:'Make it concrete', b:'A variable is "a labelled box that holds one thing." A data type is "what kind of thing is in the box — words, whole numbers, or decimals." Concrete metaphors beat definitions for this age group.'},
+        {type:'good', txt:'Let students personalise output — their name, their age, their favourite game. Ownership turns a dry exercise into something they want to show off.'}
+      ]}
+    ],
+    quiz:[
+      {q:'A student writes age = input("Age: ") then age + 1 and gets a TypeError. What\'s the cleanest fix to teach?', opts:['Tell them Python is broken','Wrap the input in int(): age = int(input("Age: "))','Use a different variable name','Remove the + 1'], c:1, fb:'input() returns a string; int() converts it to a number so arithmetic works.'},
+      {q:'What is the best beginner-friendly explanation of a "variable"?', opts:['A function that returns data','A labelled box that stores one value you can use later','A loop counter','A type of error'], c:1, fb:'The "labelled box" metaphor is concrete and age-appropriate.'},
+      {q:'What does print("5" + "3") output?', opts:['8','53','"53" with an error','Nothing'], c:1, fb:'Both are strings, so + concatenates them into "53". Great teachable surprise.'},
+      {q:'A child gets NameError: name \'naem\' is not defined. The best teaching move is to:', opts:['Fix it silently for them','Have them read the error and find the typo themselves','Restart the lesson','Tell them to avoid variables'], c:1, fb:'Teaching kids to read error messages builds independence — a core tutoring goal.'},
+      {q:'Which function tells you what kind of value a variable holds?', opts:['kind()', 'type()', 'check()', 'data()'], c:1, fb:'type() reveals str, int, float, etc. — useful for demonstrating conversions live.'}
+    ]
+  },
+  {
+    id:2, emoji:'🔀', color:'#F03D9E',
+    title:'Control Flow: Conditions & Loops',
+    desc:'if / elif / else, comparisons, and / or, plus while and for loops.',
+    obj:'Teach students to make programs decide (conditions) and repeat (loops) — including range(), nesting, and the difference between while and for.',
+    sections:[
+      {t:'📚 What this covers in the course', cards:[
+        {type:'text', h:'Two big ideas, back to back', b:'First <strong>decisions</strong>: <code>if / elif / else</code>, comparison operators (<code>==, !=, &lt;, &gt;, &gt;=, &lt;=</code>) and combining them with <code>and / or</code>. Then <strong>repetition</strong>: <code>while</code> loops, <code>for</code> loops with <code>range()</code>, and nesting loops/conditions together. These two combine into the first real "algorithms".'},
+        {type:'tip', txt:'Indentation is syntax in Python, not decoration. Spend real time on it here — half of all beginner bugs in this module are indentation or a missing colon.'}
+      ]},
+      {t:'💻 The code they\'ll see', cards:[
+        {type:'code', lbl:'conditions', code:`password = <span class="cf">input</span>(<span class="cs">"Password: "</span>)
+<span class="ck">if</span> password == <span class="cs">"kodland"</span>:
+    <span class="cf">print</span>(<span class="cs">"Access granted"</span>)
+<span class="ck">elif</span> password == <span class="cs">"guest"</span>:
+    <span class="cf">print</span>(<span class="cs">"Limited access"</span>)
+<span class="ck">else</span>:
+    <span class="cf">print</span>(<span class="cs">"Access denied"</span>)`},
+        {type:'code', lbl:'loops', code:`<span class="cc"># repeat a known number of times</span>
+<span class="ck">for</span> i <span class="ck">in</span> <span class="cf">range</span>(<span class="cn">5</span>):
+    <span class="cf">print</span>(<span class="cs">"Countdown:"</span>, <span class="cn">5</span> <span class="ck">-</span> i)
+
+<span class="cc"># repeat until a condition changes</span>
+lives = <span class="cn">3</span>
+<span class="ck">while</span> lives <span class="ck">&gt;</span> <span class="cn">0</span>:
+    <span class="cf">print</span>(<span class="cs">"Lives left:"</span>, lives)
+    lives <span class="ck">-=</span> <span class="cn">1</span>`}
+      ]},
+      {t:'🧒 How kids stumble', cards:[
+        {type:'twocol', left:{h:'Common mistakes', items:['Using <code>=</code> instead of <code>==</code> in a condition','Forgetting the colon <code>:</code>','Wrong indentation under if/for','Infinite <code>while</code> loops (forgetting to change the variable)']}, right:{h:'How to head them off', items:['"One equals stores, two equals asks"','Make the colon a habit, every time','Use consistent 4-space indents','Always ask: "what makes this loop stop?"']}},
+        {type:'warn', txt:'<code>while True:</code> with no exit is the classic freeze. Teach students to identify the "stopping condition" before they write the loop body.'}
+      ]},
+      {t:'🎯 Teaching tips', cards:[
+        {type:'hi', h:'for vs while — the rule of thumb', b:'Use <code>for</code> when you know how many times ("do this 10 times"). Use <code>while</code> when you repeat until something happens ("keep asking until the answer is right"). Give kids that one-line test.'},
+        {type:'good', txt:'Trace loops by hand on a whiteboard for the first few — write out i = 0, 1, 2… and what prints each time. Seeing the loop "unrolled" removes the magic.'}
+      ]}
+    ],
+    quiz:[
+      {q:'A student\'s if-statement always runs the first branch no matter what. The most likely cause to check first is:', opts:['They used = instead of == in the condition','Python is case-sensitive','They need more elif branches','The file is corrupted'], c:0, fb:'= assigns; == compares. "One equals stores, two equals asks" is a handy phrase.'},
+      {q:'Best one-line rule for choosing for vs while?', opts:['Always use for; while is outdated','for when you know the count, while when you repeat until a condition changes','while is faster so prefer it','They are identical'], c:1, fb:'Known number of repetitions → for. Repeat-until → while.'},
+      {q:'A child\'s program freezes and never stops. What should you teach them to look for?', opts:['A missing print','The loop\'s stopping condition / variable that never changes','Too many comments','A spelling mistake in a string'], c:1, fb:'An infinite while loop usually means the controlling variable is never updated.'},
+      {q:'What does range(5) produce in a for loop?', opts:['The numbers 1 to 5','The numbers 0,1,2,3,4','The number 5 only','A random number under 5'], c:1, fb:'range(5) starts at 0 and stops before 5 — a frequent point of confusion to pre-empt.'},
+      {q:'Which is the most beginner-appropriate way to explain elif?', opts:['"A faster else"','"An extra question Python asks only if the ones above it were false"','"A loop that runs once"','"A way to define a variable"'], c:1, fb:'elif = "otherwise, check this next condition" — only reached if earlier ones failed.'}
+    ]
+  },
+  {
+    id:3, emoji:'📦', color:'#2B8EF0',
+    title:'Data: Lists, Dictionaries & Random',
+    desc:'Storing many values: list methods, dictionaries, and the random module.',
+    obj:'Teach students to store and manipulate collections of data — lists and their methods, dictionaries (key→value), and adding chance with the random module.',
+    sections:[
+      {t:'📚 What this covers in the course', cards:[
+        {type:'text', h:'From one value to many', b:'After single variables, students learn <strong>lists</strong> (ordered collections) and their methods: <code>append</code>, <code>remove</code>, <code>pop</code>, <code>insert</code>, <code>clear</code>. Then <strong>dictionaries</strong> — looking things up by a key instead of a position (e.g. a student → their score). The <code>random</code> module adds unpredictability for games and quizzes.'},
+        {type:'tip', txt:'Lists use a position (index, starting at 0). Dictionaries use a name (key). Choosing between them — "do I look this up by number or by name?" — is the key concept to land.'}
+      ]},
+      {t:'💻 The code they\'ll see', cards:[
+        {type:'code', lbl:'lists', code:`pets = [<span class="cs">"cat"</span>, <span class="cs">"dog"</span>, <span class="cs">"fish"</span>]
+pets.<span class="cf">append</span>(<span class="cs">"hamster"</span>)   <span class="cc"># add to end</span>
+pets.<span class="cf">remove</span>(<span class="cs">"fish"</span>)      <span class="cc"># remove by value</span>
+<span class="cf">print</span>(pets[<span class="cn">0</span>])           <span class="cc"># first item: "cat"</span>`},
+        {type:'code', lbl:'dictionaries + random', code:`<span class="ck">import</span> random
+
+scores = {<span class="cs">"Ann"</span>: <span class="cn">15</span>, <span class="cs">"Leo"</span>: <span class="cn">9</span>}
+<span class="cf">print</span>(scores[<span class="cs">"Ann"</span>])      <span class="cc"># look up by key → 15</span>
+
+dice = random.<span class="cf">randint</span>(<span class="cn">1</span>, <span class="cn">6</span>)
+<span class="cf">print</span>(<span class="cs">"You rolled"</span>, dice)`}
+      ]},
+      {t:'🧒 How kids stumble', cards:[
+        {type:'twocol', left:{h:'Common mistakes', items:['Indexing from 1 instead of 0','<code>IndexError</code>: asking for an item past the end','Looking up a missing dictionary key','Forgetting <code>import random</code>']}, right:{h:'How to head them off', items:['"The first item is item zero"','Use <code>len()</code> to check size','Show key vs value clearly','Imports go at the top, once']}},
+        {type:'warn', txt:'Kids often confuse the dictionary key with its value. Drill the direction: <code>scores["Ann"]</code> means "give me Ann\'s score", not "is Ann 15?".'}
+      ]},
+      {t:'🎯 Teaching tips', cards:[
+        {type:'hi', h:'Concrete models', b:'A list is "a numbered shelf — item 0, item 1, item 2…". A dictionary is "a contacts app — you look up a name and get a number." These map directly to index vs key.'},
+        {type:'good', txt:'random makes games come alive. A number-guessing game using randint is a perfect, motivating mini-project that uses lists, conditions and loops all at once.'}
+      ]}
+    ],
+    quiz:[
+      {q:'A student writes pets[1] expecting the first pet but gets the second. What do you teach?', opts:['Python counts lists from 0, so the first item is pets[0]','Lists are unreliable','They should use a dictionary','Add 1 to every index'], c:0, fb:'Zero-based indexing: the first element is index 0. A core early hurdle.'},
+      {q:'When should a student reach for a dictionary instead of a list?', opts:['When order matters most','When they look things up by a name/key rather than a position','Dictionaries are always better','Only for numbers'], c:1, fb:'Dictionaries map keys to values — ideal for name→score style lookups.'},
+      {q:'Which method adds an item to the end of a list?', opts:['add()', 'append()', 'insert(0)', 'push()'], c:1, fb:'append() adds to the end; insert() places at a specific index.'},
+      {q:'A game using random.randint always errors with "random is not defined". The fix is:', opts:['Rename the variable','Add import random at the top of the file','Use a list instead','Reinstall Python'], c:1, fb:'The random module must be imported before use.'},
+      {q:'Best concrete metaphor for a dictionary when teaching kids?', opts:['A numbered shelf','A contacts app: look up a name, get a number','A countdown timer','A box for one value'], c:1, fb:'The contacts-app model captures key→value lookup naturally.'}
+    ]
+  },
+  {
+    id:4, emoji:'⚙️', color:'#7C5CFC',
+    title:'Functions',
+    desc:'def, return, arguments — packaging code so it can be reused.',
+    obj:'Teach students to define and call their own functions, pass arguments, and return values — and why functions keep larger programs from becoming a mess.',
+    sections:[
+      {t:'📚 What this covers in the course', cards:[
+        {type:'text', h:'Reusable building blocks', b:'Students learn <code>def</code> to define a function, parameters/arguments to pass information in, and <code>return</code> to send a result back. The course frames functions as a way to <strong>name a chunk of work</strong> and reuse it — crucial once programs (and later, games) get bigger.'},
+        {type:'tip', txt:'The hardest distinction here: a function that prints vs a function that returns. Printing shows something on screen; returning hands a value back so the rest of the program can use it.'}
+      ]},
+      {t:'💻 The code they\'ll see', cards:[
+        {type:'code', lbl:'define & call', code:`<span class="ck">def</span> <span class="cf">square</span>(number):
+    <span class="ck">return</span> number <span class="ck">*</span> number
+
+result = <span class="cf">square</span>(<span class="cn">5</span>)
+<span class="cf">print</span>(result)        <span class="cc"># 25</span>
+
+<span class="ck">def</span> <span class="cf">greet</span>(name):
+    <span class="cf">print</span>(<span class="cs">"Hello,"</span>, name)
+
+<span class="cf">greet</span>(<span class="cs">"Mia"</span>)         <span class="cc"># Hello, Mia</span>`},
+        {type:'text', h:'Define vs call', b:'Writing <code>def square(...)</code> only <em>describes</em> the function — nothing runs yet. The code runs when you <strong>call</strong> it: <code>square(5)</code>. Beginners often forget the call and wonder why "nothing happened".'}
+      ]},
+      {t:'🧒 How kids stumble', cards:[
+        {type:'twocol', left:{h:'Common mistakes', items:['Defining a function but never calling it','Confusing <code>print</code> with <code>return</code>','Wrong number of arguments','Expecting a return value from a function that only prints']}, right:{h:'How to head them off', items:['"Define = write the recipe; call = cook it"','Show both side by side','Match arguments to parameters carefully','Trace what each function gives back']}},
+        {type:'warn', txt:'<code>x = greet("Mia")</code> where greet only prints will set <code>x</code> to <code>None</code>. Show this so students learn that "print" ≠ "return".'}
+      ]},
+      {t:'🎯 Teaching tips', cards:[
+        {type:'hi', h:'The recipe metaphor', b:'A function is a recipe: <code>def</code> writes the recipe down, the arguments are the ingredients you hand it, and <code>return</code> is the finished dish you get back. Calling it is the act of cooking.'},
+        {type:'good', txt:'Motivate functions by showing repetition pain first: write the same 4 lines three times, then refactor into one function. Kids feel why functions matter when they\'ve felt the duplication.'}
+      ]}
+    ],
+    quiz:[
+      {q:'A student defines a function but "nothing happens" when they run the file. The likely reason?', opts:['They never call the function','Python needs a restart','Functions must return something','def is spelled wrong'], c:0, fb:'Defining only describes the function; it must be called to run.'},
+      {q:'What is the clearest way to explain the difference between print and return?', opts:['They are the same','print shows a value on screen; return hands a value back to the program','return is faster','print only works inside functions'], c:1, fb:'return gives a value to the caller; print just displays text.'},
+      {q:'In def square(number): return number*number, what is "number"?', opts:['A built-in keyword','A parameter — the input the function receives','The return value','A global variable'], c:1, fb:'number is the parameter; the argument is what you pass when calling, e.g. square(5).'},
+      {q:'x = greet("Mia") where greet only prints — what is x?', opts:['"Mia"','The printed text','None','An error'], c:2, fb:'A function with no return gives back None. A great way to show print ≠ return.'},
+      {q:'What\'s an effective way to motivate WHY functions are useful?', opts:['Start with the formal definition','Have students repeat the same code 3 times, then refactor into one function','Skip examples','Only use built-in functions'], c:1, fb:'Letting students feel the pain of duplication makes the value of functions click.'}
+    ]
+  },
+  {
+    id:5, emoji:'🐢', color:'#F59E0B',
+    title:'Drawing & Intro to PyGame Zero',
+    desc:'The Turtle module and the first step from text programs into graphics.',
+    obj:'Teach the leap from console programs to visuals: drawing with Turtle, then the PyGame Zero basics — Actors, WIDTH/HEIGHT, draw() and update().',
+    sections:[
+      {t:'📚 What this covers in the course', cards:[
+        {type:'text', h:'From text to pictures', b:'Students first draw with the <strong>Turtle</strong> module — using functions to draw shapes (a great payoff for the previous module). Then the course introduces <strong>PyGame Zero</strong> (<code>pgzero</code>): the game window (<code>WIDTH</code>, <code>HEIGHT</code>), <code>Actor</code> sprites, the <code>draw()</code> function (runs every frame to redraw) and <code>update()</code> (runs every frame to change things). This is "Coddy\'s Adventures".'},
+        {type:'tip', txt:'The mental shift here is huge: from a program that runs top-to-bottom once, to a game loop that redraws many times per second. Name that shift explicitly for students.'}
+      ]},
+      {t:'💻 The code they\'ll see', cards:[
+        {type:'code', lbl:'turtle (uses functions!)', code:`<span class="ck">def</span> <span class="cf">draw_square</span>(side):
+    <span class="ck">for</span> i <span class="ck">in</span> <span class="cf">range</span>(<span class="cn">4</span>):
+        turtle.<span class="cf">forward</span>(side)
+        turtle.<span class="cf">right</span>(<span class="cn">90</span>)
+
+<span class="cf">draw_square</span>(<span class="cn">100</span>)`},
+        {type:'code', lbl:'pygame zero basics', code:`<span class="cc">#pgzero</span>
+WIDTH = <span class="cn">600</span>
+HEIGHT = <span class="cn">400</span>
+
+coddy = <span class="cf">Actor</span>(<span class="cs">"coddy"</span>)
+coddy.pos = <span class="cn">300</span>, <span class="cn">200</span>
+
+<span class="ck">def</span> <span class="cf">draw</span>():
+    screen.<span class="cf">clear</span>()
+    coddy.<span class="cf">draw</span>()
+
+<span class="ck">def</span> <span class="cf">update</span>():
+    coddy.x <span class="ck">+=</span> <span class="cn">1</span>   <span class="cc"># moves right every frame</span>`}
+      ]},
+      {t:'🧒 How kids stumble', cards:[
+        {type:'twocol', left:{h:'Common mistakes', items:['Image/sprite name doesn\'t match the file','Forgetting <code>screen.clear()</code> → smears','Putting game logic outside draw/update','Confusing draw() (show) with update() (change)']}, right:{h:'How to head them off', items:['Sprite names are case-sensitive & no extension','Clear the screen each frame','Logic that repeats goes in update()','"draw = paint, update = think"']}},
+        {type:'warn', txt:'PyGame Zero calls draw() and update() for you, automatically, every frame — students must NOT call them. This "the framework calls your functions" idea is new and worth explaining slowly.'}
+      ]},
+      {t:'🎯 Teaching tips', cards:[
+        {type:'hi', h:'The flipbook model', b:'A game is a flipbook: <code>update()</code> decides what changes on the next page, <code>draw()</code> paints that page, and PyGame Zero flips pages ~60 times a second. That\'s why motion needs a tiny change each frame.'},
+        {type:'good', txt:'Reaching graphics is a massive motivation spike. Celebrate the first moving sprite — it\'s the moment many kids decide they love coding.'}
+      ]}
+    ],
+    quiz:[
+      {q:'In PyGame Zero, who calls the draw() and update() functions?', opts:['The student, manually each time','PyGame Zero itself, automatically every frame','The operating system once','They never run'], c:1, fb:'The framework calls them for you every frame — a key new concept.'},
+      {q:'What\'s the clearest way to explain draw() vs update() to a child?', opts:['They\'re identical','update() decides what changes; draw() paints the picture','draw() runs once; update() never runs','update() is for sound only'], c:1, fb:'"update = think/change, draw = paint" maps cleanly to the game loop.'},
+      {q:'A sprite won\'t appear and there\'s no obvious error. First thing to check?', opts:['The image file name matches the Actor name (no extension, correct case)','The computer\'s RAM','Whether Python is 32-bit','The monitor brightness'], c:0, fb:'Actor("coddy") needs images/coddy.png — name and case must match.'},
+      {q:'Why does coddy.x += 1 inside update() make the sprite move?', opts:['It teleports once','update() runs every frame, so x grows a little each frame → smooth motion','It only works with a while loop','It changes the window size'], c:1, fb:'Motion = a small change applied every frame by the game loop.'},
+      {q:'Drawing a square with Turtle is a great lesson because it reinforces which earlier concept?', opts:['Dictionaries','Functions and loops working together','File handling','Recursion'], c:1, fb:'draw_square uses a function containing a loop — a satisfying payoff for prior modules.'}
+    ]
+  },
+  {
+    id:6, emoji:'🎮', color:'#10B981',
+    title:'Game Development with PyGame Zero',
+    desc:'Keyboard control, animation, collisions, and mouse input.',
+    obj:'Teach the interactive heart of game-making: responding to the keyboard and mouse, animating sprites, and detecting collisions between objects.',
+    sections:[
+      {t:'📚 What this covers in the course', cards:[
+        {type:'text', h:'Making games interactive', b:'Now games respond to the player. Students learn keyboard input (<code>keyboard.up</code>, <code>on_key_down</code>), changing a sprite\'s image, smooth movement with <code>animate()</code>, <strong>collision detection</strong> (<code>colliderect</code> / <code>collidepoint</code>), and mouse handling (<code>on_mouse_down(pos)</code>). Projects include "Coddy\'s Adventures", a Minecraft-style game, a space shooter and "Clicker Heroes".'},
+        {type:'tip', txt:'Collision detection is the concept that unlocks "real" games — scoring, damage, picking things up. Budget extra time for it; it\'s conceptually richer than it looks.'}
+      ]},
+      {t:'💻 The code they\'ll see', cards:[
+        {type:'code', lbl:'keyboard control', code:`<span class="ck">def</span> <span class="cf">update</span>():
+    <span class="ck">if</span> keyboard.right:
+        coddy.x <span class="ck">+=</span> <span class="cn">5</span>
+        coddy.image = <span class="cs">"coddy_right"</span>
+    <span class="ck">elif</span> keyboard.left:
+        coddy.x <span class="ck">-=</span> <span class="cn">5</span>
+        coddy.image = <span class="cs">"coddy_left"</span>`},
+        {type:'code', lbl:'mouse & collisions', code:`<span class="ck">def</span> <span class="cf">on_mouse_down</span>(pos):
+    <span class="ck">if</span> enemy.<span class="cf">collidepoint</span>(pos):
+        <span class="ck">global</span> score
+        score <span class="ck">+=</span> <span class="cn">1</span>
+        <span class="cf">animate</span>(enemy, tween=<span class="cs">"bounce_end"</span>, duration=<span class="cn">0.5</span>)
+
+<span class="ck">def</span> <span class="cf">update</span>():
+    <span class="ck">if</span> player.<span class="cf">colliderect</span>(coin):
+        <span class="cf">print</span>(<span class="cs">"Collected!"</span>)`}
+      ]},
+      {t:'🧒 How kids stumble', cards:[
+        {type:'twocol', left:{h:'Common mistakes', items:['Modifying a score inside a function without <code>global</code>','Confusing <code>collidepoint</code> (mouse/point) with <code>colliderect</code> (two sprites)','Movement too fast/slow (wrong step size)','Forgetting to switch the sprite image when turning']}, right:{h:'How to head them off', items:['Explain why <code>global</code> is needed for module-level variables','point = mouse click, rect = object vs object','Tune the +=/-= value together','image swap = visual feedback for direction']}},
+        {type:'warn', txt:'<code>global</code> trips kids up. Keep it simple: "a function can read outside variables, but to CHANGE one it must say global first." Don\'t over-explain scope at this age.'}
+      ]},
+      {t:'🎯 Teaching tips', cards:[
+        {type:'hi', h:'Collision = "are these two boxes touching?"', b:'Every sprite has an invisible rectangle. <code>colliderect</code> asks "do these two rectangles overlap?"; <code>collidepoint</code> asks "is this point inside this rectangle?". That\'s the whole idea behind hits, pickups and clicks.'},
+        {type:'good', txt:'Encourage iteration: change a number, run, see what happens. Game dev rewards experimentation, and tutors should model "let\'s just try it" rather than planning everything up front.'}
+      ]}
+    ],
+    quiz:[
+      {q:'A student increases score inside on_mouse_down but it never changes. The fix to teach?', opts:['Use a while loop','Declare global score inside the function before changing it','Rename score','Put score in a list'], c:1, fb:'To modify a module-level variable inside a function, Python needs the global declaration.'},
+      {q:'Which is used to detect a mouse click landing on a sprite?', opts:['colliderect(other_sprite)','collidepoint(pos)','keyboard.click','on_draw()'], c:1, fb:'collidepoint checks a single point (the click position); colliderect checks two rectangles.'},
+      {q:'Simplest accurate way to explain collision detection to a child?', opts:['"Python guesses if things touch"','"Every object has an invisible box; collision asks if the boxes overlap"','"Sprites repel each other"','"It measures pixel colour"'], c:1, fb:'The "invisible boxes overlapping" model is exactly how rect collision works.'},
+      {q:'Why swap coddy.image to a left/right version when moving?', opts:['It\'s required or the game crashes','Visual feedback — the character faces the way it moves','It speeds up the code','It saves memory'], c:1, fb:'Changing the sprite image gives the player clear directional feedback.'},
+      {q:'A good tutoring habit to model during game development is:', opts:['Plan every detail before running anything','Iterate: change a value, run, observe, adjust','Avoid running code until it\'s perfect','Discourage experimentation'], c:1, fb:'Fast iteration and experimentation are core to learning game development.'}
+    ]
+  },
+  {
+    id:7, emoji:'🏆', color:'#EF4444',
+    title:'Capstone: Building & Publishing a Game',
+    desc:'Grid maps, enemies, win/lose logic, menus — and the graduation project.',
+    obj:'Prepare to guide students through their final game: grid-based maps, enemies with attributes, bonuses, levels, win/lose states, menus, and publishing the finished project.',
+    sections:[
+      {t:'📚 What this covers in the course', cards:[
+        {type:'text', h:'Everything comes together', b:'The final modules build a full RPG ("WeCode and Dragons") and a graduation project. Students use <strong>grid maps</strong> (a list of lists / 2D map), generate <strong>enemies with attributes</strong> (health, attack) via lists, <code>collidelist()</code> for many-object collisions, bonuses, multiple <strong>levels</strong>, <strong>win/lose logic</strong> and game-state <strong>menus</strong> — then publish to the Kodland HUB and present the project.'},
+        {type:'tip', txt:'This is integration, not new syntax. Almost every concept from modules 1–6 reappears at once. Your job as tutor shifts from teaching features to helping students manage a bigger project.'}
+      ]},
+      {t:'💻 The code they\'ll see', cards:[
+        {type:'code', lbl:'grid map + game state', code:`my_map = [[<span class="cn">0</span>, <span class="cn">1</span>, <span class="cn">1</span>, <span class="cn">0</span>],
+          [<span class="cn">1</span>, <span class="cn">2</span>, <span class="cn">3</span>, <span class="cn">1</span>],
+          [<span class="cn">0</span>, <span class="cn">1</span>, <span class="cn">1</span>, <span class="cn">0</span>]]
+
+mode = <span class="cs">"menu"</span>   <span class="cc"># "menu", "game", "end"</span>
+
+<span class="ck">def</span> <span class="cf">draw</span>():
+    <span class="ck">if</span> mode == <span class="cs">"menu"</span>:
+        screen.<span class="cf">draw</span>.<span class="cf">text</span>(<span class="cs">"Choose your ship"</span>, center=(<span class="cn">300</span>,<span class="cn">100</span>))
+    <span class="ck">elif</span> mode == <span class="cs">"end"</span>:
+        screen.<span class="cf">draw</span>.<span class="cf">text</span>(<span class="cs">"GAME OVER!"</span>, center=(<span class="cn">300</span>,<span class="cn">200</span>))`},
+        {type:'code', lbl:'many-enemy collision', code:`enemy_index = char.<span class="cf">collidelist</span>(enemies)
+<span class="ck">if</span> enemy_index <span class="ck">!=</span> <span class="ck">-</span><span class="cn">1</span>:
+    enemy = enemies[enemy_index]
+    char.health <span class="ck">-=</span> enemy.attack
+    <span class="ck">if</span> enemy.health <span class="ck">&lt;=</span> <span class="cn">0</span>:
+        enemies.<span class="cf">pop</span>(enemy_index)`}
+      ]},
+      {t:'🧒 How kids stumble', cards:[
+        {type:'twocol', left:{h:'Common mistakes', items:['Scope creep — wanting a game that\'s too big','Losing track of game state (menu/game/end)','Editing a list while looping over it','Running out of time before publishing']}, right:{h:'How to head them off', items:['"Finish small, then add more"','One <code>mode</code> variable drives what shows','Loop carefully when removing items','Leave time to publish & present']}},
+        {type:'warn', txt:'The biggest risk in the capstone is ambition, not syntax. Help students scope to something they can actually finish and publish — a complete small game beats an unfinished epic.'}
+      ]},
+      {t:'🎯 Teaching tips', cards:[
+        {type:'hi', h:'Game state = one signpost', b:'A single <code>mode</code> variable ("menu" / "game" / "end") tells both draw() and update() what to do right now. Teaching students to route everything through one state variable keeps big games understandable.'},
+        {type:'good', txt:'The graduation lesson is about pride and presentation. Coach students to publish to the HUB and demo their game — finishing and sharing is as much a skill as coding it. Praise completion.'}
+      ]}
+    ],
+    quiz:[
+      {q:'What\'s the single biggest risk for a student in the capstone project?', opts:['Not knowing enough syntax','Over-ambitious scope — building more than they can finish','Typing too slowly','Using too many comments'], c:1, fb:'Scope management is the key tutoring focus here; a finished small game beats an unfinished big one.'},
+      {q:'How is a game\'s "state" (menu / playing / game over) usually managed?', opts:['Three separate programs','A single mode variable that draw() and update() check','By restarting Python','With random numbers'], c:1, fb:'One mode/state variable routes what the game shows and does at any moment.'},
+      {q:'collidelist(enemies) returns -1. What does that mean?', opts:['An error occurred','The sprite is not colliding with any enemy in the list','It collided with enemy 1','The list is empty'], c:1, fb:'collidelist returns the index of the first hit, or -1 if there is no collision.'},
+      {q:'A 2D grid map in these projects is represented as:', opts:['A single string','A list of lists (rows of numbers)','A dictionary of colours','A function'], c:1, fb:'A list of lists models rows and columns — each number maps to a tile type.'},
+      {q:'During the graduation lesson, what should a tutor emphasise most?', opts:['Adding as many features as possible','Helping students finish, publish to the HUB, and present their game','Rewriting the game from scratch','Skipping the presentation'], c:1, fb:'Completion, publishing and presenting are core graduation outcomes worth praising.'}
+    ]
+  }
+];
+
+// ─── PROGRESS ───────────────────────────────────────────────────────────────
+const PKEY = 'kl-py-progress';
+function getProgress(){ try{ return JSON.parse(localStorage.getItem(PKEY)||'{}'); }catch(e){ return {}; } }
+function saveProgress(p){ localStorage.setItem(PKEY, JSON.stringify(p)); }
+function isPassed(id){ const p=getProgress(); return p[id]?.passed===true; }
+function getScore(id){ const p=getProgress(); return p[id]?.score||0; }
+function setResult(id, pct, passed){
+  const p=getProgress();
+  if(!p[id]?.passed || pct>(p[id]?.score||0)){ p[id]={passed,score:pct}; }
+  saveProgress(p);
+}
+
+// ─── STATE ────────────────────────────────────────────────────────────────
+let currentModule=null, quizData=[], qi=0, score=0;
+
+// ─── HOME ───────────────────────────────────────────────────────────────────
+function renderHome(){
+  const total = MODULES.length;
+  const done = MODULES.filter(m=>isPassed(m.id)).length;
+  document.getElementById('pnum').textContent=done+'/'+total;
+  document.getElementById('pfill').style.width=(done/total*100)+'%';
+  const tag=document.getElementById('ntag');
+  if(done>0){tag.style.display='inline';tag.textContent=done===total?'🏆 All done!':done+'/'+total+' complete';}else tag.style.display='none';
+  const g=document.getElementById('mgrid'); g.innerHTML='';
+  MODULES.forEach((m,i)=>{
+    const prev = i===0 ? true : isPassed(MODULES[i-1].id);
+    const isDone = isPassed(m.id);
+    const locked = !prev;
+    const el=document.createElement('div');
+    el.className='mc'+(locked?' locked':'')+(isDone?' done':'');
+    const pct=getScore(m.id);
+    const badge=isDone?`<span class="badge bd">✓ Passed</span>`:locked?`<span class="badge bl">🔒 Locked</span>`:`<span class="badge bs">Start →</span>`;
+    const stag=isDone?`<span class="stag">Score: <b>${pct}%</b></span>`:locked?`<span class="stag">Complete module ${i}</span>`:`<span class="stag">5 questions</span>`;
+    el.innerHTML=`<div class="mc-stripe" style="background:${m.color}"></div>
+    <div class="mc-body">
+      <div class="mc-top"><div class="mc-num">Module ${m.id}</div><div class="mc-em">${m.emoji}</div></div>
+      <div class="mc-title">${m.title}</div>
+      <div class="mc-desc">${m.desc}</div>
+      <div class="mc-foot">${badge}${stag}</div>
+    </div>`;
+    if(!locked) el.onclick=()=>openModule(m);
+    g.appendChild(el);
+  });
+  // DST card — unlocks when all modules passed
+  const allDone=MODULES.every(m=>isPassed(m.id));
+  const dstEl=document.createElement('div');
+  dstEl.className='mc'+(allDone?'':' locked');
+  dstEl.innerHTML=`<div class="mc-stripe" style="background:linear-gradient(90deg,var(--lime),var(--pink))"></div>
+  <div class="mc-body">
+    <div class="mc-top"><div class="mc-num">Final Stage</div><div class="mc-em">🏆</div></div>
+    <div class="mc-title">Digital Skill Test</div>
+    <div class="mc-desc">The final practical assessment, completed after all modules.</div>
+    <div class="mc-foot"><span class="badge ${allDone?'bd':'bl'}">${allDone?'Ready':'🔒 Locked'}</span><span class="stag">Practical assessment</span></div>
+  </div>`;
+  if(allDone) dstEl.onclick=showDST;
+  g.appendChild(dstEl);
+}
+
+// ─── MODULE CONTENT ─────────────────────────────────────────────────────────
+function openModule(m){
+  currentModule=m.id;
+  const total = MODULES.length;
+  let html=`<div class="meyebrow">Module ${m.id} of ${total}</div><div class="mh1">${m.emoji} ${m.title}</div><div class="mobj" style="border-left-color:${m.color}"><strong>Objective:</strong> ${m.obj}</div>`;
+  m.sections.forEach(s=>{html+=`<div class="sch">${s.t}</div>`;s.cards.forEach(c=>{html+=rc(c);});});
+  const lbl=isPassed(m.id)?'🔄 Retake Quiz':'📝 Take the Quiz →';
+  html+=`<hr class="divider"><button class="ctabtn" onclick="startQuiz(${m.id})">${lbl}</button>`;
+  document.getElementById('cbody').innerHTML=html;
+  showScreen('screen-content');
+  window.scrollTo(0,0);
+}
+
+function rc(c){
+  if(c.type==='text')return`<div class="card"><h4>${c.h}</h4><p>${c.b}</p></div>`;
+  if(c.type==='hi')return`<div class="card hi"><h4>${c.h}</h4><p>${c.b}</p></div>`;
+  if(c.type==='warn')return`<div class="callout cw"><span class="ci">⚠️</span><span>${c.txt}</span></div>`;
+  if(c.type==='tip')return`<div class="callout ct"><span class="ci">💡</span><span>${c.txt}</span></div>`;
+  if(c.type==='good')return`<div class="callout cg"><span class="ci">✅</span><span>${c.txt}</span></div>`;
+  if(c.type==='code')return`<div class="card codecard"><div class="clbl">${c.lbl}</div><pre>${c.code}</pre></div>`;
+  if(c.type==='twocol'){
+    const li=items=>items.map(i=>`<li>${i}</li>`).join('');
+    return`<div class="two-col"><div class="card"><h4>${c.left.h}</h4><ul>${li(c.left.items)}</ul></div><div class="card hi"><h4 style="color:var(--hi-t)">${c.right.h}</h4><ul>${li(c.right.items)}</ul></div></div>`;
+  }
+  return'';
+}
+
+// ─── QUIZ ─────────────────────────────────────────────────────────────────
+function startQuiz(id){
+  currentModule=id;
+  const m=MODULES.find(x=>x.id===id);
+  quizData=[...m.quiz].sort(()=>Math.random()-.5);
+  qi=0; score=0;
+  renderQ(); showScreen('screen-quiz');
+}
+function renderQ(){
+  const q=quizData[qi];
+  document.getElementById('qfill').style.width=(qi/quizData.length*100)+'%';
+  document.getElementById('qcount').textContent=`Question ${qi+1} of ${quizData.length}`;
+  document.getElementById('qtext').textContent=q.q;
+  const el=document.getElementById('qopts'); el.innerHTML='';
+  q.opts.forEach((o,idx)=>{const b=document.createElement('button');b.className='qopt';b.textContent=o;b.onclick=()=>answerQ(idx);el.appendChild(b);});
+  document.getElementById('qfb').className='qfb';
+  document.getElementById('qnxt').className='qnxt';
+}
+function answerQ(idx){
+  if(document.querySelector('.qopt.answered')) return;
+  const q=quizData[qi]; const ok=idx===q.c;
+  if(ok)score++;
+  document.querySelectorAll('.qopt').forEach((b,i)=>{b.classList.add('answered');if(i===q.c)b.classList.add('correct');else if(i===idx&&!ok)b.classList.add('wrong');});
+  const fb=document.getElementById('qfb');
+  fb.className='qfb show '+(ok?'ok':'bad');
+  fb.innerHTML=(ok?'✅ Correct! ':'❌ Not quite. ')+q.fb;
+  const nx=document.getElementById('qnxt');
+  nx.className='qnxt show';
+  nx.textContent=qi===quizData.length-1?'See Results →':'Next →';
+}
+function nextQ(){
+  qi++;
+  if(qi<quizData.length){renderQ();return;}
+  const pct=Math.round(score/quizData.length*100);
+  const passed=pct>=70;
+  setResult(currentModule, pct, passed);
+  showResults(pct, passed);
+}
+
+// ─── RESULTS ────────────────────────────────────────────────────────────────
+function showResults(pct, passed){
+  const m=MODULES.find(x=>x.id===currentModule);
+  const last=MODULES[MODULES.length-1].id;
+  let acts='';
+  if(passed && m.id<last) acts+=`<button class="bdark" onclick="openModule(MODULES.find(x=>x.id==${m.id+1}))">Start Module ${m.id+1} →</button>`;
+  if(passed && m.id===last) acts+=`<button class="bdark" onclick="showComplete()">🏆 View Certificate</button>`;
+  acts+=`<button class="bline" onclick="openModule(MODULES.find(x=>x.id==${m.id}))">📖 Review Module ${m.id}</button>`;
+  acts+=`<button class="bline" onclick="startQuiz(${m.id})">🔄 Retake Quiz</button>`;
+  document.getElementById('rbody').innerHTML=`<div class="remi">${passed?'🎉':'😅'}</div><div class="rtitle">${passed?'Module Passed!':'Keep Reviewing'}</div><div class="rpct ${passed?'pass':'fail'}">${pct}%</div><div class="rsub">You got ${score}/${quizData.length} correct.${passed?' Next module unlocked!':' You need 70% to pass. Review and try again!'}</div>${acts}`;
+  showScreen('screen-results');
+  window.scrollTo(0,0);
+  setTimeout(renderHome, 100);
+}
+
+// ─── COMPLETE ─────────────────────────────────────────────────────────────
+function showComplete(){
+  const avg=Math.round(MODULES.map(m=>getScore(m.id)).reduce((a,b)=>a+b,0)/MODULES.length);
+  document.getElementById('compbody').innerHTML=`<div style="font-size:72px">🏆</div><h1 style="font-family:'Nunito',sans-serif;font-size:32px;font-weight:900;letter-spacing:-.5px;margin-top:14px;color:var(--text)">Training Complete!</h1><p style="color:var(--text2);margin-top:8px;font-size:15px;line-height:1.65">You've worked through all ${MODULES.length} modules — congratulations! You're ready for the Digital Skill Test.</p><div class="cert"><div class="clbl2">Certificate of Completion</div><h2>Python Tutor Training</h2><p>Kodland · All ${MODULES.length} modules · Average score: ${avg}%</p><div class="cmods">${MODULES.map(m=>`<div class="cmod" style="background:${m.color}20;color:${m.color}">${m.emoji}</div>`).join('')}</div></div><button class="bdark" style="margin-bottom:10px" onclick="showDST()">🎯 Take the Digital Skill Test →</button><button class="bline" onclick="goHome()">← Back to Dashboard</button>`;
+  showScreen('screen-complete');
+  window.scrollTo(0,0);
+}
+
+// ─── DST ────────────────────────────────────────────────────────────────────
+function showDST(){ showScreen('screen-dst'); window.scrollTo(0,0); }
+
+// ─── NAV ────────────────────────────────────────────────────────────────────
+function exitQuiz(){ if(currentModule) openModule(MODULES.find(x=>x.id===currentModule)); }
+function goHome(){ renderHome(); showScreen('screen-home'); window.scrollTo(0,0); }
+function showScreen(id){
+  document.querySelectorAll('.screen').forEach(s=>s.classList.remove('active'));
+  document.getElementById(id).classList.add('active');
+}
+
+// ─── INIT ───────────────────────────────────────────────────────────────────
+renderHome();
+showScreen('screen-home');
+
+// ─── DEV MODE (Shift+D × 3 to toggle — unlocks all modules) ──────────────────
+(function(){
+  let _dSeq = 0, _dTimer = null;
+  document.addEventListener('keydown', function(e){
+    if(e.key === 'D' && e.shiftKey){
+      clearTimeout(_dTimer);
+      _dSeq++;
+      _dTimer = setTimeout(() => _dSeq = 0, 1200);
+      if(_dSeq >= 3){ _dSeq = 0; toggleDevMode(); }
+    }
+  });
+  function toggleDevMode(){
+    const active = localStorage.getItem('kl-devmode') === '1';
+    if(!active){
+      const p = {};
+      MODULES.forEach(m => { p[m.id] = { passed: true, score: 100 }; });
+      saveProgress(p);
+      localStorage.setItem('kl-devmode','1');
+      showDevBadge(true);
+      renderHome();
+      alert('🔓 Dev mode ON — all modules unlocked');
+    } else {
+      localStorage.removeItem('kl-devmode');
+      localStorage.removeItem(PKEY);
+      showDevBadge(false);
+      renderHome();
+      alert('🔒 Dev mode OFF — progress cleared');
+    }
+  }
+  function showDevBadge(on){
+    let b = document.getElementById('dev-badge');
+    if(!b){
+      b = document.createElement('div');
+      b.id = 'dev-badge';
+      b.style.cssText = 'position:fixed;bottom:12px;right:12px;background:#f03d9e;color:#fff;font-family:Nunito,sans-serif;font-weight:900;font-size:12px;padding:4px 10px;border-radius:20px;z-index:9999;pointer-events:none;letter-spacing:.5px';
+      b.textContent = '🔓 DEV MODE';
+      document.body.appendChild(b);
+    }
+    b.style.display = on ? 'block' : 'none';
+  }
+  if(localStorage.getItem('kl-devmode') === '1'){ showDevBadge(true); }
+})();
+</script>
+
+<footer style="text-align:center;padding:20px 24px;font-size:11px;color:var(--text2);border-top:1px solid var(--border);margin-top:auto;line-height:1.7;opacity:0.7;">
+  © 2026 Kodland. Designed and developed by Ayberk Temizci for internal tutor training purposes.<br>
+  This material is the exclusive property of Kodland. Unauthorized duplication, distribution, or use outside of Kodland's internal training program is strictly prohibited.
+</footer>
+</body>
+</html>
+
+<!-- This web app was created by Ayberk Toygar Temizci for Kodland -->
