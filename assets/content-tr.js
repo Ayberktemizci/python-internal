@@ -72,7 +72,7 @@ ui: {
   videoPhBody: 'Örnek ders videosu burada görünecek.'
 },
 dst: {
-  formUrl: '',
+  formUrl: 'https://docs.google.com/forms/d/e/1FAIpQLSf9DGZq6Jtz79AX_kzcYPm_rZmV2Dym4UCanfUpO9YRtcFShw/viewform?usp=dialog',
   placeholderNote: 'Bölgeniz için gönderim formu yakında eklenecek.',
   html: `<div class="dst-body">
     <div class="dst-intro">

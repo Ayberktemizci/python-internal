@@ -1,0 +1,18 @@
+# macOS
+.DS_Store
+**/.DS_Store
+
+# Editor / OS junk
+Thumbs.db
+*.swp
+.idea/
+.vscode/
+
+# Large local media (host the lesson video externally, e.g. YouTube — do NOT commit)
+*.mov
+*.mp4
+*.mkv
+
+# Local source material (not part of the app; keep out of the repo)
+*.pdf
+*.pptx
