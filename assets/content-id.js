@@ -72,7 +72,7 @@ ui: {
   videoPhBody: 'Video pelajaran model akan muncul di sini.'
 },
 dst: {
-  formUrl: '',
+  formUrl: 'https://docs.google.com/forms/d/e/1FAIpQLSeTOfIaJeuC88vdOm3PFB_Vt9tubXKBDI7xFlxIeWuQoPM5ug/viewform',
   placeholderNote: 'Formulir pengiriman untuk wilayah Anda akan segera ditambahkan.',
   html: `<div class="dst-body">
     <div class="dst-intro">

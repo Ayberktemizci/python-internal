@@ -72,7 +72,7 @@ ui: {
   videoPhBody: 'O vídeo da aula modelo aparecerá aqui.'
 },
 dst: {
-  formUrl: 'https://docs.google.com/forms/d/e/1FAIpQLSc0w2lKXr3l7ZuEcm7qNc5KeH5B7TWkyHBxt1rr2d2C0rlkFA/viewform?usp=sharing&ouid=100557475740185486592',
+  formUrl: 'https://docs.google.com/forms/d/e/1FAIpQLSejEdg97urNmThOIvDKTCd-WvPob4rqSMt0H-gB4BsLAraxMw/viewform?usp=header',
   placeholderNote: 'O formulário de envio para a sua região será adicionado em breve.',
   html: `<div class="dst-body">
     <div class="dst-intro">
